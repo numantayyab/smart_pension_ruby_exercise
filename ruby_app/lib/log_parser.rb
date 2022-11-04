@@ -20,13 +20,18 @@ attr_accessor :file, :views
     end
 
     def most_views
-        views.sort_by {|k, v| v.size}.reverse.map{|a,b|
-            "#{a}: #{b.size} visits"}
+        sorted_data.map{|page,ips|
+            "#{page}: #{ips.size} visits"}
     end
 
     def uniq_views
-        views.sort_by {|k, v| v.uniq.size}.map{|a,b|
-        "#{a}: #{b.uniq.size} unique visits"}
+        sorted_data('uniq').map{|page,ips|
+        "#{page}: #{ips.uniq.size} unique visits"}
+    end
+
+    private
+    def sorted_data(filter='')
+        views.sort_by {|k, v| filter.empty? ? v.size : v.send(filter).size}.reverse
     end
 
 end
